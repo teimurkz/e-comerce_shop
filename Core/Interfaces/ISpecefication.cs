@@ -11,6 +11,7 @@ public interface ISpecefication<T>
     int Take { get; }
     int Skip { get; }
     bool IsPagingEnabled { get; }
+    IQueryable<T> ApplyCriteria(IQueryable<T> query);
 }
 
 public interface ISpecefication<T, TResult> : ISpecefication<T>
