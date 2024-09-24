@@ -19,7 +19,7 @@ namespace API.Middleware
             }
         }
 
-        private Task HandleExceptionAs(HttpContext context, Exception ex, IHostEnvironment env)
+        private static Task HandleExceptionAs(HttpContext context, Exception ex, IHostEnvironment env)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -30,7 +30,7 @@ namespace API.Middleware
 
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var json = JsonSerializer.Serialize(Response, options);
-            return context.Response.WriteAsJsonAsync(json);
+            return context.Response.WriteAsync(json);
         }
     }
 }
