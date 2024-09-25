@@ -13,6 +13,26 @@
 
 a {
     &.active {
-        color: #7d007dfa;
+        color: #7d007d;
     }
+}
+
+
+
+@keyframes spin-coin {
+    0% {
+        transform: rotateY(0deg);
+    }
+
+    50% {
+        transform: rotateY(180deg);
+    }
+
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+.animate-spin-coin {
+    animation: spin-coin 15s linear infinite;
 }
