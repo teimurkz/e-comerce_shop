@@ -5,7 +5,6 @@ using Core.Entites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
@@ -41,7 +40,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         await signInManager.SignOutAsync();
         return NoContent();
     }
-    [Authorize]
+
     [HttpGet("user-info")]
     public async Task<ActionResult> GetUserInfo()
     {
@@ -57,7 +56,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         });
     }
 
-    [HttpGet]
+    [HttpGet("auth-status")]
     public ActionResult GetAutchState()
     {
         return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
