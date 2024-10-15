@@ -1,5 +1,6 @@
 ﻿using Core.Entites;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
@@ -28,6 +29,9 @@ public class SpeceficationEvaluator<T> where T : BaseEntity
         {
             query = query.Skip(spec.Skip).Take(spec.Take);
         }
+        query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+        query = spec.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
+
         return query;
     }
 
