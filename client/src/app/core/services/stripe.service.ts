@@ -113,7 +113,7 @@ export class StripeService {
         },
         redirect: 'if_required'
       })
-    } else{
+    } else {
       throw new Error('Unable to load stripe')
     }
 
@@ -124,7 +124,7 @@ export class StripeService {
     if (!cart) throw new Error('Problem with cart');
     return this.http.post<Cart>(this.baseUrl + 'payments/' + cart.id, {}).pipe(
       map(cart => {
-        this.cartService.setCart(cart);
+        this.cartService.cart.set(cart);
         return cart;
       })
     )
@@ -133,6 +133,5 @@ export class StripeService {
     this.elements = undefined;
     this.addressElement = undefined;
     this.paymentElement = undefined;
-
   }
 }

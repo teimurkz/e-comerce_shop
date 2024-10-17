@@ -35,7 +35,7 @@ namespace API.Extensions
                 ProductName = orderItem.ItemOrdered.ProductName,
                 PictureUrl = orderItem.ItemOrdered.PictureUrl,
                 Price = orderItem.Price,
-                Qunatity = orderItem.Quantity
+                Quantity = orderItem.Quantity
             };
         }
     }
