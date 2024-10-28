@@ -13,6 +13,7 @@ import { ShopParams } from '../../shared/models/shopParams';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-shop',
@@ -34,7 +35,7 @@ export class ShopComponent implements OnInit {
   shopParams = new ShopParams();
   pageSizeOptions = [5, 10, 15, 20]
 
-  baseUrl = 'https://localhost:5001/api/'
+  baseUrl = environment.apiUrl;
 
   ngOnInit(): void {
     this.initializeShop();
