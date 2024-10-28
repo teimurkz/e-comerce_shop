@@ -11,7 +11,7 @@ using Stripe;
 
 namespace API.Controllers;
 
-public class PaymentsController(IpaymentService paymentService, 
+public class PaymentsController(IPaymentService paymentService, 
     IUnitOfWork unit, ILogger<PaymentsController> logger, 
     IConfiguration config, IHubContext<NotificationHub> hubContext) : BaseApiController
 {

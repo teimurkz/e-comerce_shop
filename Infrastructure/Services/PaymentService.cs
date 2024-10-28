@@ -9,7 +9,7 @@ using Stripe;
 
 namespace Infrastructure.Services
 {
-    public class PaymentService(IConfiguration config, ICartService cartService, IUnitOfWork unit) : IpaymentService
+    public class PaymentService(IConfiguration config, ICartService cartService, IUnitOfWork unit) : IPaymentService
     {
         public async Task<ShoppingCart?> CreateOrUpdatePaymentsIntent(string cartId)
         {
