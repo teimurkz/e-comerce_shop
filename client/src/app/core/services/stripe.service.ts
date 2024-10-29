@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ConfirmationToken, loadStripe, Stripe, StripeAddressElement, StripeAddressElementGetElementOptions, StripeAddressElementOptions, StripeElements, StripePaymentElement } from '@stripe/stripe-js';
+import {ConfirmationToken, loadStripe, Stripe, StripeAddressElement, StripeAddressElementOptions, StripeElements, StripePaymentElement} from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { CartService } from './cart.service';
 import { Cart } from '../../shared/models/cart';
-import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, map } from 'rxjs';
 import { AccountService } from './account.service';
 
@@ -15,7 +15,7 @@ export class StripeService {
   private cartService = inject(CartService);
   private accountService = inject(AccountService);
   private http = inject(HttpClient);
-  private stripePromise?: Promise<Stripe | null>;
+  private stripePromise: Promise<Stripe | null>;
   private elements?: StripeElements;
   private addressElement?: StripeAddressElement;
   private paymentElement?: StripePaymentElement;
@@ -33,7 +33,8 @@ export class StripeService {
       const stripe = await this.getStripeInstance();
       if (stripe) {
         const cart = await firstValueFrom(this.createOrUpdatePaymentIntent());
-        this.elements = stripe.elements({ clientSecret: cart.clientSecret, appearance: { labels: "floating" } })
+        this.elements = stripe.elements(
+          {clientSecret: cart.clientSecret, appearance: {labels: 'floating'}})
       } else {
         throw new Error('Stripe has not been loaded');
       }
@@ -59,11 +60,13 @@ export class StripeService {
       if (elements) {
         const user = this.accountService.currentUser();
         let defaultValues: StripeAddressElementOptions['defaultValues'] = {};
+
         if (user) {
-          defaultValues.name = user.firstName + '' + user.lastName
+          defaultValues.name = user.firstName + ' ' + user.lastName;
         }
+
         if (user?.address) {
-          defaultValues.address = {
+          defaultValues.address  = {
             line1: user.address.line1,
             line2: user.address.line2,
             city: user.address.city,
@@ -72,28 +75,28 @@ export class StripeService {
             postal_code: user.address.postalCode
           }
         }
+
         const options: StripeAddressElementOptions = {
           mode: 'shipping',
           defaultValues
         };
         this.addressElement = elements.create('address', options);
       } else {
-        throw new Error('Elements instance has not been loaded')
+        throw new Error('Elements instance has not been loaded');
       }
     }
     return this.addressElement;
   }
 
-  async CreateConfirmationToken() {
+  async createConfirmationToken() {
     const stripe = await this.getStripeInstance();
     const elements = await this.initializeElements();
     const result = await elements.submit();
-
     if (result.error) throw new Error(result.error.message);
     if (stripe) {
-      return await stripe.createConfirmationToken({ elements });
+      return await stripe.createConfirmationToken({elements});
     } else {
-      throw new Error('Stripe not avalibale');
+      throw new Error('Stripe not available');
     }
   }
 
@@ -114,24 +117,29 @@ export class StripeService {
         redirect: 'if_required'
       })
     } else {
-      throw new Error('Unable to load stripe')
+      throw new Error('Unable to load stripe');
     }
-
   }
 
   createOrUpdatePaymentIntent() {
     const cart = this.cartService.cart();
+    const hasClientSecret = !!cart?.clientSecret;
     if (!cart) throw new Error('Problem with cart');
     return this.http.post<Cart>(this.baseUrl + 'payments/' + cart.id, {}).pipe(
-      map(cart => {
-        this.cartService.cart.set(cart);
+      map(async cart => {
+        if (!hasClientSecret) {
+          await firstValueFrom(this.cartService.setCart(cart));
+          return cart;
+        }
         return cart;
       })
     )
   }
-  disposeElement() {
+
+  disposeElements() {
     this.elements = undefined;
     this.addressElement = undefined;
     this.paymentElement = undefined;
   }
+
 }
