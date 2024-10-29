@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {ConfirmationToken, loadStripe, Stripe, StripeAddressElement, StripeAddressElementOptions, StripeElements, StripePaymentElement} from '@stripe/stripe-js';
+import { ConfirmationToken, loadStripe, Stripe, StripeAddressElement, StripeAddressElementOptions, StripeElements, StripePaymentElement } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from './cart.service';
@@ -34,7 +34,7 @@ export class StripeService {
       if (stripe) {
         const cart = await firstValueFrom(this.createOrUpdatePaymentIntent());
         this.elements = stripe.elements(
-          {clientSecret: cart.clientSecret, appearance: {labels: 'floating'}})
+          { clientSecret: cart.clientSecret, appearance: { labels: 'floating' } })
       } else {
         throw new Error('Stripe has not been loaded');
       }
@@ -66,7 +66,7 @@ export class StripeService {
         }
 
         if (user?.address) {
-          defaultValues.address  = {
+          defaultValues.address = {
             line1: user.address.line1,
             line2: user.address.line2,
             city: user.address.city,
@@ -94,7 +94,7 @@ export class StripeService {
     const result = await elements.submit();
     if (result.error) throw new Error(result.error.message);
     if (stripe) {
-      return await stripe.createConfirmationToken({elements});
+      return await stripe.createConfirmationToken({ elements });
     } else {
       throw new Error('Stripe not available');
     }
