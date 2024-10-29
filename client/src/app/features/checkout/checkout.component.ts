@@ -80,7 +80,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async getConfirmationToken() {
     try {
       if (Object.values(this.completionStatus()).every(status => status === true)) {
-        const result = await this.stripeService.CreateConfirmationToken();
+        const result = await this.stripeService.createConfirmationToken();
         if (result.error) throw new Error(result.error.message);
         this.confirmationToken = result.confirmationToken;
         console.log(this.confirmationToken)
