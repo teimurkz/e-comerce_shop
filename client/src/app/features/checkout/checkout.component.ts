@@ -80,7 +80,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async getConfirmationToken() {
     try {
       if (Object.values(this.completionStatus()).every(status => status === true)) {
-        const result = await this.stripeService.createConfirmationToken();
+        const result = await this.stripeService.CreateConfirmationToken();
         if (result.error) throw new Error(result.error.message);
         this.confirmationToken = result.confirmationToken;
         console.log(this.confirmationToken)
@@ -181,6 +181,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.stripeService.disposeElements();
+    this.stripeService.disposeElement();
   }
 }
