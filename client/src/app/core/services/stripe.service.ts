@@ -60,7 +60,7 @@ export class StripeService {
         const user = this.accountService.currentUser();
         let defaultValues: StripeAddressElementOptions['defaultValues'] = {};
         if (user) {
-          defaultValues.name = user.firstName + '' + user.lastName
+          defaultValues.name = user.firstName + ' ' + user.lastName;
         }
         if (user?.address) {
           defaultValues.address = {
@@ -78,22 +78,21 @@ export class StripeService {
         };
         this.addressElement = elements.create('address', options);
       } else {
-        throw new Error('Elements instance has not been loaded')
+        throw new Error('Elements instance has not been loaded');
       }
     }
     return this.addressElement;
   }
 
-  async CreateConfirmationToken() {
+  async createConfirmationToken() {
     const stripe = await this.getStripeInstance();
     const elements = await this.initializeElements();
     const result = await elements.submit();
-
     if (result.error) throw new Error(result.error.message);
     if (stripe) {
       return await stripe.createConfirmationToken({ elements });
     } else {
-      throw new Error('Stripe not avalibale');
+      throw new Error('Stripe not available');
     }
   }
 
@@ -114,9 +113,8 @@ export class StripeService {
         redirect: 'if_required'
       })
     } else {
-      throw new Error('Unable to load stripe')
+      throw new Error('Unable to load stripe');
     }
-
   }
 
   createOrUpdatePaymentIntent() {
