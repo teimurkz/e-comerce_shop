@@ -41,6 +41,8 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();
 
