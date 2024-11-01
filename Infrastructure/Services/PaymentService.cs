@@ -9,7 +9,7 @@ using Stripe;
 
 namespace Infrastructure.Services
 {
-    public class PaymentService : IpaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly IConfiguration _config;
         private readonly ICartService _cartService;

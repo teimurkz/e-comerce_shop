@@ -15,7 +15,7 @@ using Stripe;
 
 namespace API.Controllers
 {
-    public class PaymentsController(IpaymentService paymentService, IUnitOfWork unit, ILogger<PaymentsController> logger, IConfiguration config, IHubContext<NotificationHub> hubContext) : BaseApiController
+    public class PaymentsController(IPaymentService paymentService, IUnitOfWork unit, ILogger<PaymentsController> logger, IConfiguration config, IHubContext<NotificationHub> hubContext) : BaseApiController
     {
         private readonly string _whSecret = config["StripeSettings:WhSecret"];
         [Authorize]

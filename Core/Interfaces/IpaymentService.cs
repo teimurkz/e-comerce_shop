@@ -6,7 +6,7 @@ using Core.Entites;
 
 namespace Core.Interfaces
 {
-    public interface IpaymentService
+    public interface IPaymentService
     {
         Task<ShoppingCart?> CreateOrUpdatePaymentsIntent(string cartId);
     }
