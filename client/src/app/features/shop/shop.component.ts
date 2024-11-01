@@ -34,7 +34,6 @@ export class ShopComponent implements OnInit {
   shopParams = new ShopParams();
   pageSizeOptions = [5, 10, 15, 20]
 
-  baseUrl = 'https://localhost:5001/api/'
 
   ngOnInit(): void {
     this.initializeShop();
