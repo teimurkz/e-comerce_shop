@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
-using Core.Entites.OrderAggregate;
+using Core.Entities.OrderAggregate;
 
 namespace API.Extensions
 {
@@ -22,6 +22,7 @@ namespace API.Extensions
                 ShippingPrice = order.DeliveryMethod.Price,
                 OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList(),
                 Subtotal = order.Subtotal,
+                Discount = order.Discount,
                 Total = order.GetTotal(),
                 Status = order.Status.ToString(),
                 PaymentIntentId = order.PaymentIntentId

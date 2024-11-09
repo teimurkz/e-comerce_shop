@@ -1,5 +1,5 @@
 ﻿using API.RequestHelpers;
-using Core.Entites;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Specefications;
 using Microsoft.AspNetCore.Mvc;

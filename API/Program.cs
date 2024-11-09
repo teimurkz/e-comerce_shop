@@ -1,6 +1,6 @@
 using API.Middleware;
 using API.SignalR;
-using Core.Entites;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
@@ -32,6 +32,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>().AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddSignalR();
+builder.Services.AddScoped<ICouponService, CouponService>();
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
@@ -47,7 +48,7 @@ app.UseStaticFiles();
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.MapHub<NotificationHub>("/hub/notifications");
-app.MapFallbackToController("Index","Fallback");
+app.MapFallbackToController("Index", "Fallback");
 
 try
 {

@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Cart, CartItem } from '../../shared/models/cart';
+import { Cart, CartItem, Coupon } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
-import { map } from 'rxjs';
+import { firstValueFrom, map, tap } from 'rxjs';
 import { DeliveryMethod } from '../../shared/models/deliveryMethod';
 
 @Injectable({
@@ -16,29 +16,33 @@ export class CartService {
   itemCount = computed(() => {
     return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0)
   });
-
-  selectedDelivery = signal<DeliveryMethod | null>(null)
-
+  selectedDelivery = signal<DeliveryMethod | null>(null);
   totals = computed(() => {
     const cart = this.cart();
     const delivery = this.selectedDelivery();
+
     if (!cart) return null;
     const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    let discountValue = 0;
+
+    if (cart.coupon) {
+      if (cart.coupon.amountOff) {
+        discountValue = cart.coupon.amountOff;
+      } else if (cart.coupon.percentOff) {
+        discountValue = subtotal * (cart.coupon.percentOff / 100);
+      }
+    }
+
     const shipping = delivery ? delivery.price : 0;
-    const discount = 0;
+
     return {
       subtotal,
       shipping,
-      discount,
-      total: subtotal + shipping - discount
+      discount: discountValue,
+      total: subtotal + shipping - discountValue
     }
   })
-
-  setCart(cart: Cart) {
-    return this.http.post<Cart>(this.baseUrl + 'cart', cart).subscribe({
-      next: cart => this.cart.set(cart)
-    })
-  }
 
   getCart(id: string) {
     return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe(
@@ -47,19 +51,30 @@ export class CartService {
         return cart;
       })
     )
-
   }
 
-  addItemToCart(item: CartItem | Product, quantity = 1) {
+  setCart(cart: Cart) {
+    return this.http.post<Cart>(this.baseUrl + 'cart', cart).pipe(
+      tap(cart => {
+        this.cart.set(cart)
+      })
+    )
+  }
+
+  applyDiscount(code: string) {
+    return this.http.get<Coupon>(this.baseUrl + 'coupons/' + code);
+  }
+
+  async addItemToCart(item: CartItem | Product, quantity = 1) {
     const cart = this.cart() ?? this.createCart();
     if (this.isProduct(item)) {
       item = this.mapProductToCartItem(item);
     }
     cart.items = this.addOrUpdateItem(cart.items, item, quantity);
-    this.setCart(cart);
+    await firstValueFrom(this.setCart(cart));
   }
 
-  removeItemFromCart(productId: number, quantity = 1) {
+  async removeItemFromCart(productId: number, quantity = 1) {
     const cart = this.cart();
     if (!cart) return;
     const index = cart.items.findIndex(x => x.productId === productId);
@@ -72,10 +87,11 @@ export class CartService {
       if (cart.items.length === 0) {
         this.deleteCart();
       } else {
-        this.setCart(cart);
+        await firstValueFrom(this.setCart(cart));
       }
     }
   }
+
   deleteCart() {
     this.http.delete(this.baseUrl + 'cart?id=' + this.cart()?.id).subscribe({
       next: () => {
@@ -84,8 +100,9 @@ export class CartService {
       }
     })
   }
+
   private addOrUpdateItem(items: CartItem[], item: CartItem, quantity: number): CartItem[] {
-    const index = items.findIndex(x => x.productId == item.productId);
+    const index = items.findIndex(x => x.productId === item.productId);
     if (index === -1) {
       item.quantity = quantity;
       items.push(item);
@@ -94,6 +111,7 @@ export class CartService {
     }
     return items;
   }
+
   private mapProductToCartItem(item: Product): CartItem {
     return {
       productId: item.id,
@@ -105,12 +123,15 @@ export class CartService {
       type: item.type
     }
   }
+
   private isProduct(item: CartItem | Product): item is Product {
     return (item as Product).id !== undefined;
   }
+
   private createCart(): Cart {
     const cart = new Cart();
     localStorage.setItem('cart_id', cart.id);
     return cart;
   }
+
 }

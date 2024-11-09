@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Entites.OrderAggregate;
+using Core.Entities.OrderAggregate;
 
 namespace Core.Specefications
 {

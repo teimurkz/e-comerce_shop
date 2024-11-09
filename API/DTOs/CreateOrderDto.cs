@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Entites.OrderAggregate;
+using Core.Entities.OrderAggregate;
 
 namespace API.DTOs
 {
@@ -18,5 +18,6 @@ namespace API.DTOs
         public ShippingAddress ShippingAddress { get; set; } = null;
         [Required]
         public PaymentSummary PaymentSummary { get; set; } = null;
+        public decimal Discount { get; set; }
     }
 }

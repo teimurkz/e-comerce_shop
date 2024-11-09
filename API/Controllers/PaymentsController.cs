@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
 using API.SignalR;
-using Core.Entites;
-using Core.Entites.OrderAggregate;
+using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Core.Interfaces;
 using Core.Specefications;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +22,7 @@ namespace API.Controllers
         [HttpPost("{cartId}")]
         public async Task<ActionResult<ShoppingCart>> CreateOrUpdatePaymentIntent(string cartId)
         {
-            var cart = await paymentService.CreateOrUpdatePaymentsIntent(cartId);
+            var cart = await paymentService.CreateOrUpdatePaymentIntent(cartId);
 
             if (cart == null) return BadRequest("Problem with your cart");
 

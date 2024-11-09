@@ -1,4 +1,4 @@
-﻿using Core.Entites;
+﻿using Core.Entities;
 
 namespace Core.Specefications;
 
@@ -11,7 +11,7 @@ public class ProductSpecification : BaseSpecefication<Product>
 
     )
     {
-        ApplyPaging(specParams.PageSize * (specParams.PageIndex -1), specParams.PageSize);
+        ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
         switch (specParams.Sort)
         {
             case "priceAsc":

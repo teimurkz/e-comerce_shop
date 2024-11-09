@@ -1,6 +1,6 @@
 using System.Security.Authentication;
 using System.Security.Claims;
-using Core.Entites;
+using Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

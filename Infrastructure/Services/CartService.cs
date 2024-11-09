@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Core.Entites;
+using Core.Entities;
 using Core.Interfaces;
 using StackExchange.Redis;
 
@@ -23,9 +23,9 @@ public class CartService(IConnectionMultiplexer redis) : ICartService
 
     public async Task<ShoppingCart?> SetCartAsync(ShoppingCart cart)
     {
-        var created = await _database.StringSetAsync(cart.Id, 
+        var created = await _database.StringSetAsync(cart.Id,
             JsonSerializer.Serialize(cart), TimeSpan.FromDays(30));
-    
+
         if (!created) return null;
 
         return await GetCartAsync(cart.Id);

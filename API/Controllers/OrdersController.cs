@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Extensions;
-using Core.Entites;
-using Core.Entites.OrderAggregate;
+using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Core.Interfaces;
 using Core.Specefications;
 using Microsoft.AspNetCore.Authorization;
@@ -52,6 +52,7 @@ namespace API.Controllers
                 DeliveryMethod = deliveryMethod,
                 ShippingAddress = orderDto.ShippingAddress,
                 Subtotal = items.Sum(x => x.Price * x.Quantity),
+                Discount = orderDto.Discount,
                 PaymentSummary = orderDto.PaymentSummary,
                 PaymentIntentId = cart.PaymentIntentId,
                 BuyerEmail = email

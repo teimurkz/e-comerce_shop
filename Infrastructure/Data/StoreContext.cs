@@ -1,5 +1,5 @@
-﻿using Core.Entites;
-using Core.Entites.OrderAggregate;
+﻿using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Infrastructure.Config;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
